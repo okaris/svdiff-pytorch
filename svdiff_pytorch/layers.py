@@ -30,9 +30,10 @@ class SVDConv2d(nn.Conv2d):
 
     def perform_svd(self):
         # shape
-        weight_reshaped = rearrange(self.weight, 'co cin h w -> co (cin h w)')
-        self.U, self.S, self.Vh = torch.linalg.svd(weight_reshaped, full_matrices=False)
-        self.done_svd = True        
+        with torch.no_grad():
+            weight_reshaped = rearrange(self.weight, 'co cin h w -> co (cin h w)')
+            self.U, self.S, self.Vh = torch.linalg.svd(weight_reshaped, full_matrices=False)
+            self.done_svd = True        
         
     def reset_parameters(self):
         nn.Conv2d.reset_parameters(self)
@@ -73,9 +74,10 @@ class SVDConv1d(nn.Conv1d):
 
     def perform_svd(self):
         # shape
-        weight_reshaped = rearrange(self.weight, 'co cin h w -> co (cin h w)')
-        self.U, self.S, self.Vh = torch.linalg.svd(weight_reshaped, full_matrices=False)
-        self.done_svd = True        
+        with torch.no_grad():
+            weight_reshaped = rearrange(self.weight, 'co cin h w -> co (cin h w)')
+            self.U, self.S, self.Vh = torch.linalg.svd(weight_reshaped, full_matrices=False)
+            self.done_svd = True        
         
     def reset_parameters(self):
         nn.Conv1d.reset_parameters(self)
@@ -113,8 +115,9 @@ class SVDLinear(nn.Linear):
         self.scale = scale
 
     def perform_svd(self):
-        self.U, self.S, self.Vh = torch.linalg.svd(self.weight, full_matrices=False)
-        self.done_svd = True    
+        with torch.no_grad():
+            self.U, self.S, self.Vh = torch.linalg.svd(self.weight, full_matrices=False)
+            self.done_svd = True    
 
     def reset_parameters(self):
         nn.Linear.reset_parameters(self)
@@ -151,8 +154,9 @@ class SVDEmbedding(nn.Embedding):
         self.scale = scale
 
     def perform_svd(self):
-        self.U, self.S, self.Vh = torch.linalg.svd(self.weight, full_matrices=False)
-        self.done_svd = True    
+        with torch.no_grad():
+            self.U, self.S, self.Vh = torch.linalg.svd(self.weight, full_matrices=False)
+            self.done_svd = True    
 
     def reset_parameters(self):
         nn.Embedding.reset_parameters(self)
@@ -188,8 +192,9 @@ class SVDLayerNorm(nn.LayerNorm):
         self.scale = scale
 
     def perform_svd(self):
-        self.U, self.S, self.Vh = torch.linalg.svd(self.weight.unsqueeze(0), full_matrices=False)
-        self.done_svd = True    
+        with torch.no_grad():
+            self.U, self.S, self.Vh = torch.linalg.svd(self.weight.unsqueeze(0), full_matrices=False)
+            self.done_svd = True    
 
     def reset_parameters(self):
         nn.LayerNorm.reset_parameters(self)
@@ -226,8 +231,9 @@ class SVDGroupNorm(nn.GroupNorm):
         self.scale = scale
 
     def perform_svd(self):
-        self.U, self.S, self.Vh = torch.linalg.svd(self.weight.unsqueeze(0), full_matrices=False)
-        self.done_svd = True    
+        with torch.no_grad():
+            self.U, self.S, self.Vh = torch.linalg.svd(self.weight.unsqueeze(0), full_matrices=False)
+            self.done_svd = True    
 
     def reset_parameters(self):
         nn.GroupNorm.reset_parameters(self)
