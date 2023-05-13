@@ -86,6 +86,8 @@ class CrossAttention(nn.Module):
 
         if cross_attention_norm:
             self.norm_cross = SVDLayerNorm(cross_attention_dim)
+        else:
+            self.norm_cross = None
 
         self.to_q = SVDLinear(query_dim, inner_dim, bias=bias)
         self.to_k = SVDLinear(cross_attention_dim, inner_dim, bias=bias)
